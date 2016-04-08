@@ -1,0 +1,8 @@
+name: proto_game_console
+version: 0.0.1
+description: proto_game in console mode (stdin/stdout)
+
+
+dependencies:
+  proto_game:
+    path: "../proto_game"
