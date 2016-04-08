@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:proto_game/src/proto_game_base.dart';
-import 'command.dart';
+import 'package:proto_game_console/command.dart';
 import 'Console/console_entryPoint.dart';
 
 main(List<String> args) async {
@@ -12,8 +12,8 @@ main(List<String> args) async {
 
   InteractiveConsole console = new InteractiveConsole(game);
 
+  print("You are in the room: ${(game.plateau as PlateauImpl).currentRoom.name}");
   while (true){
-    print("You are in the room: ${(game.plateau as PlateauImpl).currentRoom.name}");
     ConsoleLine line = await console.readLine();
   }
 }

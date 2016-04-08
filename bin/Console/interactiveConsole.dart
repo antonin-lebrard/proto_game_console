@@ -10,7 +10,7 @@ class InteractiveConsole extends Console {
   InteractiveConsole(Game game){
     onTab.listen(waitForPossibleInput);
     onEnter.listen(executeCommand);
-    commandsMap = new CommandMap(game);
+    commandsMap = new CommandMap(game, new StdIOInterface());
   }
 
   void waitForPossibleInput(ConsoleLine line){
@@ -43,12 +43,13 @@ class InteractiveConsole extends Console {
         }
       }
     }
+    if (maxCommuneString.length <= line.arg.length) return;
     stdout.write(maxCommuneString.substring(line.arg.length));
     line.arg = maxCommuneString;
   }
 
   void listAutoCompletionPossibilities(ConsoleLine line){
-
+    stdout.writeln("Should have autocompletion list here");
   }
 
   void executeCommand(ConsoleLine line){
