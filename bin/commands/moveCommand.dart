@@ -16,21 +16,22 @@ class MoveCommand extends Command {
       } else if (arg.length > dir.length) {
         return;
       } else {
-        int score = calculateLikenessScore(arg, dir);
-        if (possibleCompletion[score] == null)
-          possibleCompletion[score] = new List();
-        possibleCompletion[score].add(dir);
+        int score = Command.calculateLikenessScore(arg, dir);
+        if (score >= 0) {
+          if (possibleCompletion[score] == null)
+            possibleCompletion[score] = new List();
+          possibleCompletion[score].add(dir);
+        }
       }
     });
     return possibleCompletion;
   }
 
-  int calculateLikenessScore(String arg, String comparison){
-    int score = 0;
-    if (comparison.contains(arg))
-      score += arg.length;
-    // TODO : Should add memory of how often comparison is used and add it to the score
-    return score;
+  @override
+  void executeCommand(String arg){
+    Direction direction = GameDecoderJSON.parseDirection(arg);
+    if (direction != null)
+      game.plateau.move(direction);
   }
 
 }

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:proto_game/src/proto_game_base.dart';
@@ -16,6 +15,5 @@ main(List<String> args) async {
   while (true){
     print("You are in the room: ${(game.plateau as PlateauImpl).currentRoom.name}");
     ConsoleLine line = await console.readLine();
-    stdout.writeln(line.toString());
   }
 }

@@ -44,7 +44,7 @@ class Console {
 
   void beginInput(){
     subscription = stdin.listen((List<int> codeUnits){
-      if (codeUnits.contains(9)) {  /// TAB
+      if (codeUnits.contains(9)) {       /// TAB
         _onTab.add(currentLine);
       }
       else if (codeUnits.contains(13)) { /// Enter
@@ -59,7 +59,10 @@ class Console {
         stdout.write(' ');
       }
       else if (codeUnits.contains(8)) {  /// Return
-        currentLine.deleteChar();
+        if (currentLine.commandComplete && currentLine.arg.length == 0)
+          currentLine.commandComplete = false;
+        else
+          currentLine.deleteChar();
         stdout.write(LATIN1.decode(codeUnits));
         stdout.write(' ');
         stdout.write(LATIN1.decode(codeUnits));
