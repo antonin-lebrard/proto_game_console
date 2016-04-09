@@ -7,7 +7,7 @@ class LookAtCommand extends Command {
   @override
   List<String> _listPossibleArgs() {
     List<String> possibleArgs = new List();
-    possibleArgs.add("yourself");
+    possibleArgs..add("yourself")..add("myself")..add("me");
     game.player.inventory.forEach((BaseGameObject object){
       possibleArgs.add(object.name);
     });
@@ -29,6 +29,8 @@ class LookAtCommand extends Command {
     if (arg.length == 0) return;
     switch (arg) {
       case "yourself":
+      case "myself":
+      case "me":
         showPlayer();
         break;
       case "currentroom":
@@ -60,11 +62,13 @@ class LookAtCommand extends Command {
     io.writeNewLine("${game.plateau.getCurrentRoom().name} :");
     io.writeNewLine("${game.plateau.getCurrentRoom().getDescription()}");
     io.writeLine("");
-    io.writeString("You see ");
-    for (BaseGameObject obj in game.plateau.getCurrentRoom().getObjects()){
-      io.writeString("${obj.name}, ${obj.description}, ");
+    if (game.plateau.getCurrentRoom().getObjects() != null || game.plateau.getCurrentRoom().getObjects().length > 0){
+      io.writeString("You see ");
+      for (BaseGameObject obj in game.plateau.getCurrentRoom().getObjects()){
+        io.writeString("${obj.name}, ${obj.description}, ");
+      }
+      io.removeChars(2);
     }
-    io.removeChars(2);
     io.writeLine("");
   }
 
