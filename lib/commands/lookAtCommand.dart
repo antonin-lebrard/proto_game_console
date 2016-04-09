@@ -8,6 +8,7 @@ class LookAtCommand extends Command {
   List<String> _listPossibleArgs() {
     List<String> possibleArgs = new List();
     possibleArgs..add("yourself")..add("myself")..add("me");
+    possibleArgs..add("inventory");
     game.player.inventory.forEach((BaseGameObject object){
       possibleArgs.add(object.name);
     });
@@ -33,6 +34,9 @@ class LookAtCommand extends Command {
       case "me":
         showPlayer();
         break;
+      case "inventory":
+        showInventory();
+        break;
       case "currentroom":
       case "room":
       case "here":
@@ -54,6 +58,17 @@ class LookAtCommand extends Command {
     }
     io.writeLine("Inventory :");
     for (BaseGameObject obj in game.player.inventory){
+      io.writeLine("${obj.name} : ${obj.description}");
+    }
+  }
+
+  void showInventory(){
+    io.writeLine("Inventory :");
+    for (BaseGameObject obj in game.player.inventory){
+      io.writeLine("${obj.name} : ${obj.description}");
+    }
+    io.writeNewLine("You're wearing :");
+    for (WearableGameObject obj in game.player.wearing){
       io.writeLine("${obj.name} : ${obj.description}");
     }
   }

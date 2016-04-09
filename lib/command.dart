@@ -6,6 +6,7 @@ import 'package:proto_game_console/ioInterface.dart';
 
 part "commands/moveCommand.dart";
 part "commands/lookAtCommand.dart";
+part "commands/wearTakeOffCommand.dart";
 
 abstract class Command {
 
@@ -66,6 +67,8 @@ class CommandMap {
     commands = {
       "move": new MoveCommand(game, io),
       "lookat": new LookAtCommand(game, io),
+      "wear": new WearCommand(game, io),
+      "takeoff": new TakeOffCommand(game, io),
     };
   }
 
