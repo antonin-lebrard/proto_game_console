@@ -6,6 +6,8 @@ description: proto_game in console mode (stdin/stdout)
 dependencies:
   proto_game:
     path: "../proto_game"
+  dart_console:
+    path: "../dart-console"
 
 environment:
   sdk: '>=1.0.0 <2.0.0'

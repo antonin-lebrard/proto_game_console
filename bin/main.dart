@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:proto_game/src/proto_game_base.dart';
 import 'package:proto_game_console/command.dart';
-import 'package:proto_game_console/console/console_entryPoint.dart';
+import 'package:dart_console/dart_console.dart';
 
 main(List<String> args) async {
   String jsonContent = new File('example.json').readAsStringSync();
@@ -10,10 +10,13 @@ main(List<String> args) async {
 
   Game game = gameDecoder.readFromFormat(jsonContent);
 
-  InteractiveConsole console = new InteractiveConsole(game);
+  InteractiveConsole console = new InteractiveConsole();
 
-  print("You are in the room: ${(game.plateau as PlateauImpl).currentRoom.name}");
-  while (true){
-    ConsoleLine line = await console.readLine();
-  }
+  new GameCommandListing(game).forEach((Command command){
+    console.registerCommand(command);
+  });
+
+
+  print("You are in the room: ${game.player.plateau.currentRoom.name}");
+  console.beginInput();
 }

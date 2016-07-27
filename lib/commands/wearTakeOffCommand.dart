@@ -1,18 +1,18 @@
 part of proto_game_console.command;
 
 
-class WearCommand extends Command {
+class WearCommand extends GameCommand {
 
-  WearCommand(Game game, IOInterface io) : super(game, io);
+  WearCommand(Game game) : super(game, "wear");
 
   @override
-  List<String> _listPossibleArgs() {
+  List<String> listPossibleArgs() {
     List<String> possibleArgs = new List<String>();
     for (BaseGameObject obj in game.player.inventory){
       if (obj is WearableGameObject)
         possibleArgs.add(obj.name);
     }
-    for (BaseGameObject obj in game.plateau.getCurrentRoom().getObjects()){
+    for (BaseGameObject obj in game.player.plateau.getCurrentRoom().getObjects()){
       if (obj is WearableGameObject)
         possibleArgs.add(obj.name);
     }
@@ -20,7 +20,7 @@ class WearCommand extends Command {
   }
 
   @override
-  void executeCommand(String arg) {
+  void executeCommand(String arg, Stdio io) {
     if (arg.length == 0) return;
     for (int i = 0; i < game.player.inventory.length; i++){
       BaseGameObject obj = game.player.inventory[i];
@@ -35,19 +35,19 @@ class WearCommand extends Command {
         return;
       }
     }
-    if (game.plateau.getCurrentRoom().getObjects() == null) {
+    if (game.player.plateau.getCurrentRoom().getObjects() == null) {
       io.writeNewLine("${arg} not found");
       return;
     }
-    for (int i = 0; i < game.plateau.getCurrentRoom().getObjects().length; i++){
-      BaseGameObject obj = game.plateau.getCurrentRoom().getObjects()[i];
+    for (int i = 0; i < game.player.plateau.getCurrentRoom().getObjects().length; i++){
+      BaseGameObject obj = game.player.plateau.getCurrentRoom().getObjects()[i];
       if (obj.name == arg){
         if (!(obj is WearableGameObject)) {
           io.writeNewLine("${obj.name} is not wearable");
           return;
         }
         game.player.wearing.add(obj);
-        game.plateau.getCurrentRoom().getObjects().remove(obj);
+        game.player.plateau.getCurrentRoom().getObjects().remove(obj);
         io.writeNewLine("You're now wearing ${obj.name}");
         return;
       }
@@ -56,12 +56,12 @@ class WearCommand extends Command {
   }
 }
 
-class TakeOffCommand extends Command {
+class TakeOffCommand extends GameCommand {
 
-  TakeOffCommand(Game game, IOInterface io) : super(game, io);
+  TakeOffCommand(Game game) : super(game, "takeoff");
 
   @override
-  List<String> _listPossibleArgs() {
+  List<String> listPossibleArgs() {
     List<String> possibleArgs = new List();
     for (WearableGameObject obj in game.player.wearing){
       possibleArgs.add(obj.name);
@@ -70,7 +70,7 @@ class TakeOffCommand extends Command {
   }
 
   @override
-  void executeCommand(String arg){
+  void executeCommand(String arg, Stdio io){
     if (arg.length == 0) return;
     for (int i = 0; i < game.player.wearing.length; i++){
       WearableGameObject obj = game.player.wearing[i];

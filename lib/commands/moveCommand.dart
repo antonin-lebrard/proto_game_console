@@ -1,14 +1,14 @@
 part of proto_game_console.command;
 
 
-class MoveCommand extends Command {
+class MoveCommand extends GameCommand {
 
-  MoveCommand(Game game, IOInterface io) : super(game, io);
+  MoveCommand(Game game) : super(game, "move");
 
   @override
-  List<String> _listPossibleArgs(){
+  List<String> listPossibleArgs(){
     List<String> possibleArgs = new List<String>();
-    game.plateau.getCurrentRoom().getNextRooms().keys.forEach((Direction direction){
+    game.player.plateau.getCurrentRoom().getNextRooms().keys.forEach((Direction direction){
       String dir = direction.toString().substring("Direction.".length, direction.toString().length).toLowerCase();
       possibleArgs.add(dir);
     });
@@ -16,10 +16,10 @@ class MoveCommand extends Command {
   }
 
   @override
-  void executeCommand(String arg){
+  void executeCommand(String arg, Stdio io){
     Direction direction = GameDecoderJSON.parseDirection(arg);
     if (direction != null)
-      game.plateau.move(direction);
+      game.player.plateau.move(direction);
   }
 
 }

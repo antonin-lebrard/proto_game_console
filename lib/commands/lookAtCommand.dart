@@ -1,11 +1,11 @@
 part of proto_game_console.command;
 
 
-class LookAtCommand extends Command {
-  LookAtCommand(Game game, IOInterface io) : super(game, io);
+class LookAtCommand extends GameCommand {
+  LookAtCommand(Game game) : super(game, "lookat");
 
   @override
-  List<String> _listPossibleArgs() {
+  List<String> listPossibleArgs() {
     List<String> possibleArgs = new List();
     possibleArgs..add("yourself")..add("myself")..add("me");
     possibleArgs..add("inventory");
@@ -15,39 +15,39 @@ class LookAtCommand extends Command {
     game.player.wearing.forEach((WearableGameObject object){
       possibleArgs.add(object.name);
     });
-    possibleArgs..add("currentroom")..add("room")..add("here")..add(game.plateau.getCurrentRoom().name);
-    game.plateau.getCurrentRoom().getNextRooms()?.keys?.forEach((Direction direction){
+    possibleArgs..add("currentroom")..add("room")..add("here")..add(game.player.plateau.getCurrentRoom().name);
+    game.player.plateau.getCurrentRoom().getNextRooms()?.keys?.forEach((Direction direction){
       possibleArgs.add(direction.toString().substring("Direction.".length, direction.toString().length).toLowerCase());
     });
-    game.plateau.getCurrentRoom().getObjects()?.forEach((BaseGameObject object){
+    game.player.plateau.getCurrentRoom().getObjects()?.forEach((BaseGameObject object){
       possibleArgs.add(object.name);
     });
     return possibleArgs;
   }
 
   @override
-  void executeCommand(String arg) {
+  void executeCommand(String arg, Stdio io) {
     if (arg.length == 0) return;
     switch (arg) {
       case "yourself":
       case "myself":
       case "me":
-        showPlayer();
+        showPlayer(io);
         break;
       case "inventory":
-        showInventory();
+        showInventory(io);
         break;
       case "currentroom":
       case "room":
       case "here":
-        showCurrentRoom();
+        showCurrentRoom(io);
         break;
       default:
-        processArg(arg);
+        processArg(io, arg);
     }
   }
 
-  void showPlayer() {
+  void showPlayer(Stdio io) {
     io.writeNewLine("You're ${game.player.name}");
     for (String key in game.player.mapGlobalProperties.keys) {
       io.writeLine("Your ${game.player.getProperty(key).name} is at ${game.player.getProperty(key).value}");
@@ -62,7 +62,7 @@ class LookAtCommand extends Command {
     }
   }
 
-  void showInventory(){
+  void showInventory(Stdio io){
     io.writeLine("Inventory :");
     for (BaseGameObject obj in game.player.inventory){
       io.writeLine("${obj.name} : ${obj.description}");
@@ -73,13 +73,13 @@ class LookAtCommand extends Command {
     }
   }
 
-  void showCurrentRoom(){
-    io.writeNewLine("${game.plateau.getCurrentRoom().name} :");
-    io.writeNewLine("${game.plateau.getCurrentRoom().getDescription()}");
+  void showCurrentRoom(Stdio io){
+    io.writeNewLine("${game.player.plateau.getCurrentRoom().name} :");
+    io.writeNewLine("${game.player.plateau.getCurrentRoom().getDescription()}");
     io.writeLine("");
-    if (game.plateau.getCurrentRoom().getObjects() != null || game.plateau.getCurrentRoom().getObjects().length > 0){
+    if (game.player.plateau.getCurrentRoom().getObjects() != null || game.player.plateau.getCurrentRoom().getObjects().length > 0){
       io.writeString("You see ");
-      for (BaseGameObject obj in game.plateau.getCurrentRoom().getObjects()){
+      for (BaseGameObject obj in game.player.plateau.getCurrentRoom().getObjects()){
         io.writeString("${obj.name}, ${obj.description}, ");
       }
       io.removeChars(2);
@@ -87,44 +87,44 @@ class LookAtCommand extends Command {
     io.writeLine("");
   }
 
-  void showObject(BaseGameObject obj, [isPlayerWearingIt = false]){
+  void showObject(Stdio io, BaseGameObject obj, [isPlayerWearingIt = false]){
     io.writeLine("${obj.name}, ${obj.description}");
     if (isPlayerWearingIt)
       io.writeLine("You're wearing it");
   }
 
-  void showDirection(Direction dir){
+  void showDirection(Stdio io, Direction dir){
     String dirString = dir.toString().substring("Direction.".length, dir.toString().length).toLowerCase();
-    io.writeNewLine("$dirString of here, you see ${game.plateau.getCurrentRoom().getNextRooms()[dir].getDescription()}");
+    io.writeNewLine("$dirString of here, you see ${game.player.plateau.getCurrentRoom().getNextRooms()[dir].getDescription()}");
   }
 
-  void processArg(String arg){
-    if (arg == game.plateau.getCurrentRoom().name){
-      showCurrentRoom();
+  void processArg(Stdio io, String arg){
+    if (arg == game.player.plateau.getCurrentRoom().name){
+      showCurrentRoom(io);
       return;
     }
     game.player.inventory.forEach((BaseGameObject object){
       if (arg == object.name){
-        showObject(object);
+        showObject(io, object);
         return;
       }
     });
     game.player.wearing.forEach((WearableGameObject object){
       if (arg == object.name){
-        showObject(object, true);
+        showObject(io, object, true);
         return;
       }
     });
-    game.plateau.getCurrentRoom().getNextRooms()?.keys?.forEach((Direction direction){
+    game.player.plateau.getCurrentRoom().getNextRooms()?.keys?.forEach((Direction direction){
       String dir = direction.toString().substring("Direction.".length, direction.toString().length).toLowerCase();
       if (dir == arg) {
-        showDirection(direction);
+        showDirection(io, direction);
         return;
       }
     });
-    game.plateau.getCurrentRoom().getObjects()?.forEach((BaseGameObject object){
+    game.player.plateau.getCurrentRoom().getObjects()?.forEach((BaseGameObject object){
       if (arg == object.name){
-        showObject(object);
+        showObject(io, object);
         return;
       }
     });
