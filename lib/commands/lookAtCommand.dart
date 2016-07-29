@@ -50,7 +50,7 @@ class LookAtCommand extends GameCommand {
   void showPlayer(Stdio io) {
     io.writeNewLine("You're ${game.player.name}");
     for (String key in game.player.mapGlobalProperties.keys) {
-      io.writeLine("Your ${game.player.getProperty(key).name} is at ${game.player.getProperty(key).value}");
+      io.writeLine("Your ${game.player.getProperty(key).name} is at ${game.player.getProperty(key).getValue()}");
     }
     io.writeNewLine("You're wearing :");
     for (WearableGameObject obj in game.player.wearing){
