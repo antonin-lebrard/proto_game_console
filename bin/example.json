@@ -3,14 +3,15 @@
     "title": "example",
     "version": "0.0.0",
     "globals": [
-      {"name": "testGlobalOne", "type": "num", "value": 0 },
-      {"name": "testGlobalTwo", "type": "string", "value": "test" }
+      {"name": "numGl", "type": "num", "value": 0 },
+      {"name": "stringGl", "type": "string", "value": "test" },
+      {"name": "boolGl", "type": "bool", "value": true }
     ],
     "player": {
       "name": "Sicile",
       "properties": [
         {"name": "firstPropertyPlayer", "type": "num", "value": 0 },
-        {"name": "firstPropertyPlayer", "type": "num", "value": 100 }
+        {"name": "secondPropertyPlayer", "type": "num", "value": 100 }
       ],
       "inventory": [
         {"name": "Bag", "type": "wearable", "description": "placeholder bag \n description" }
@@ -38,6 +39,30 @@
         "direction": {
           "west": "start"
         }
+      }
+    ],
+    "events": [
+      { "listenTo": "move",
+        "stopEvent": true,
+        "conditions": [
+          "param.from == rooms.start",
+          "param.to == rooms.test"
+        ],
+        "apply":[
+          "globals.numGl += 10",
+          "globals.stringGl = 'applying event consumer effect'"
+        ]
+      },
+      { "listenTo": "move",
+        "stopEvent": false,
+        "conditions": [
+          "param.from == rooms.test"
+        ],
+        "apply":[
+          "globals.numGl -= globals.boolGl ? 0 : 100",
+          "globals.stringGl += ' add this bit'",
+          "globals.boolGl = false"
+        ]
       }
     ],
     "currentRoomId": "start"
