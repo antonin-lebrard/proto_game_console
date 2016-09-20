@@ -29,8 +29,7 @@ class WearCommand extends GameCommand {
           io.writeNewLine("${obj.name} is not wearable");
           return;
         }
-        game.player.wearing.add(obj);
-        game.player.inventory.remove(obj);
+        obj.executeAction("wear");
         io.writeNewLine("You're now wearing ${obj.name}");
         return;
       }
@@ -46,8 +45,7 @@ class WearCommand extends GameCommand {
           io.writeNewLine("${obj.name} is not wearable");
           return;
         }
-        game.player.wearing.add(obj);
-        game.player.plateau.getCurrentRoom().getObjects().remove(obj);
+        obj.executeAction("wear");
         io.writeNewLine("You're now wearing ${obj.name}");
         return;
       }
@@ -75,9 +73,8 @@ class TakeOffCommand extends GameCommand {
     for (int i = 0; i < game.player.wearing.length; i++){
       WearableGameObject obj = game.player.wearing[i];
       if (obj.name == arg){
-        game.player.inventory.add(obj);
-        game.player.wearing.remove(obj);
-        io.writeNewLine("You have take off ${obj.name}");
+        obj.executeAction("remove");
+        io.writeNewLine("You have taken off ${obj.name}");
         return;
       }
     }
