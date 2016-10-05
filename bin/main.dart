@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:proto_game/src/proto_game_base.dart';
@@ -36,9 +37,24 @@ class MappingToStdio extends LowLevelIo {
   MappingToStdio(this.io);
 
   void clear() => io.clear();
-  String readLine() => io.readLine();
+  Future<String> readLine() => new Future.value(io.readLine());
   void removeChars(int nb) => io.removeChars(nb);
   void writeLine(String line) => io.writeLine(line);
   void writeNewLine(String line) => io.writeNewLine(line);
   void writeString(String string) => io.writeString(string);
+  Future<String> presentChoices(List<String> choices){
+    Completer<String> completer;
+    bool chose = false;
+    while (!chose){
+      io.writeLine("Choose by typing the n° of your choice:");
+      for (int i = 0; i < choices.length; i++)
+        io.writeLine("$i: ${choices[i]}");
+      int idx = int.parse(io.readLine(), onError: (_){});
+      if (idx > -1 && idx < choices.length){
+        completer.complete(choices[idx]);
+        chose = true;
+      }
+    }
+    return completer.future;
+  }
 }
