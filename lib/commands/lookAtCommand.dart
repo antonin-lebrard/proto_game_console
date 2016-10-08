@@ -10,17 +10,17 @@ class LookAtCommand extends GameCommand {
     possibleArgs..add("yourself")..add("myself")..add("me");
     possibleArgs..add("inventory");
     game.player.inventory.forEach((BaseGameObject object){
-      possibleArgs.add(object.name_id);
+      possibleArgs.add(object.displayName);
     });
     game.player.wearing.forEach((WearableGameObject object){
-      possibleArgs.add(object.name_id);
+      possibleArgs.add(object.displayName);
     });
-    possibleArgs..add("currentroom")..add("room")..add("here")..add(game.player.plateau.getCurrentRoom().name_id);
+    possibleArgs..add("currentroom")..add("room")..add("here")..add(game.player.plateau.getCurrentRoom().displayName);
     game.player.plateau.getCurrentRoom().getNextRooms()?.keys?.forEach((Direction direction){
       possibleArgs.add(direction.toString().substring("Direction.".length, direction.toString().length).toLowerCase());
     });
     game.player.plateau.getCurrentRoom().getObjects()?.forEach((BaseGameObject object){
-      possibleArgs.add(object.name_id);
+      possibleArgs.add(object.displayName);
     });
     return possibleArgs;
   }
@@ -54,33 +54,33 @@ class LookAtCommand extends GameCommand {
     }
     io.writeNewLine("You're wearing :");
     for (WearableGameObject obj in game.player.wearing){
-      io.writeLine("${obj.name_id} : ${obj.description}");
+      io.writeLine("${obj.displayName} : ${obj.description}");
     }
     io.writeLine("Inventory :");
     for (BaseGameObject obj in game.player.inventory){
-      io.writeLine("${obj.name_id} : ${obj.description}");
+      io.writeLine("${obj.displayName} : ${obj.description}");
     }
   }
 
   void showInventory(Stdio io){
     io.writeLine("Inventory :");
     for (BaseGameObject obj in game.player.inventory){
-      io.writeLine("${obj.name_id} : ${obj.description}");
+      io.writeLine("${obj.displayName} : ${obj.description}");
     }
     io.writeNewLine("You're wearing :");
     for (WearableGameObject obj in game.player.wearing){
-      io.writeLine("${obj.name_id} : ${obj.description}");
+      io.writeLine("${obj.displayName} : ${obj.description}");
     }
   }
 
   void showCurrentRoom(Stdio io){
-    io.writeNewLine("${game.player.plateau.getCurrentRoom().name_id} :");
+    io.writeNewLine("${game.player.plateau.getCurrentRoom().displayName} :");
     io.writeNewLine("${game.player.plateau.getCurrentRoom().getDescription()}");
     io.writeLine("");
     if (game.player.plateau.getCurrentRoom().getObjects() != null || game.player.plateau.getCurrentRoom().getObjects().length > 0){
       io.writeString("You see ");
       for (BaseGameObject obj in game.player.plateau.getCurrentRoom().getObjects()){
-        io.writeString("${obj.name_id}, ${obj.description}, ");
+        io.writeString("${obj.displayName}, ${obj.description}, ");
       }
       io.removeChars(2);
     }
@@ -88,7 +88,7 @@ class LookAtCommand extends GameCommand {
   }
 
   void showObject(Stdio io, BaseGameObject obj, [isPlayerWearingIt = false]){
-    io.writeLine("${obj.name_id}, ${obj.description}");
+    io.writeLine("${obj.displayName}, ${obj.description}");
     if (isPlayerWearingIt)
       io.writeLine("You're wearing it");
   }
@@ -99,18 +99,18 @@ class LookAtCommand extends GameCommand {
   }
 
   void processArg(Stdio io, String arg){
-    if (arg == game.player.plateau.getCurrentRoom().name_id){
+    if (arg == game.player.plateau.getCurrentRoom().displayName){
       showCurrentRoom(io);
       return;
     }
     game.player.inventory.forEach((BaseGameObject object){
-      if (arg == object.name_id){
+      if (arg == object.displayName){
         showObject(io, object);
         return;
       }
     });
     game.player.wearing.forEach((WearableGameObject object){
-      if (arg == object.name_id){
+      if (arg == object.displayName){
         showObject(io, object, true);
         return;
       }
@@ -123,7 +123,7 @@ class LookAtCommand extends GameCommand {
       }
     });
     game.player.plateau.getCurrentRoom().getObjects()?.forEach((BaseGameObject object){
-      if (arg == object.name_id){
+      if (arg == object.displayName){
         showObject(io, object);
         return;
       }

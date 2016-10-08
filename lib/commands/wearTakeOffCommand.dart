@@ -10,11 +10,11 @@ class WearCommand extends GameCommand {
     List<String> possibleArgs = new List<String>();
     for (BaseGameObject obj in game.player.inventory){
       if (obj is WearableGameObject)
-        possibleArgs.add(obj.name_id);
+        possibleArgs.add(obj.displayName);
     }
     for (BaseGameObject obj in game.player.plateau.getCurrentRoom().getObjects()){
       if (obj is WearableGameObject)
-        possibleArgs.add(obj.name_id);
+        possibleArgs.add(obj.displayName);
     }
     return possibleArgs;
   }
@@ -24,13 +24,13 @@ class WearCommand extends GameCommand {
     if (arg.length == 0) return;
     for (int i = 0; i < game.player.inventory.length; i++){
       BaseGameObject obj = game.player.inventory[i];
-      if (obj.name_id == arg){
+      if (obj.displayName == arg){
         if (!(obj is WearableGameObject)) {
-          io.writeNewLine("${obj.name_id} is not wearable");
+          io.writeNewLine("${obj.displayName} is not wearable");
           return;
         }
         obj.executeAction("wear");
-        io.writeNewLine("You're now wearing ${obj.name_id}");
+        io.writeNewLine("You're now wearing ${obj.displayName}");
         return;
       }
     }
@@ -40,13 +40,13 @@ class WearCommand extends GameCommand {
     }
     for (int i = 0; i < game.player.plateau.getCurrentRoom().getObjects().length; i++){
       BaseGameObject obj = game.player.plateau.getCurrentRoom().getObjects()[i];
-      if (obj.name_id == arg){
+      if (obj.displayName == arg){
         if (!(obj is WearableGameObject)) {
-          io.writeNewLine("${obj.name_id} is not wearable");
+          io.writeNewLine("${obj.displayName} is not wearable");
           return;
         }
         obj.executeAction("wear");
-        io.writeNewLine("You're now wearing ${obj.name_id}");
+        io.writeNewLine("You're now wearing ${obj.displayName}");
         return;
       }
     }
@@ -62,7 +62,7 @@ class TakeOffCommand extends GameCommand {
   List<String> listPossibleArgs() {
     List<String> possibleArgs = new List();
     for (WearableGameObject obj in game.player.wearing){
-      possibleArgs.add(obj.name_id);
+      possibleArgs.add(obj.displayName);
     }
     return possibleArgs;
   }
@@ -72,9 +72,9 @@ class TakeOffCommand extends GameCommand {
     if (arg.length == 0) return;
     for (int i = 0; i < game.player.wearing.length; i++){
       WearableGameObject obj = game.player.wearing[i];
-      if (obj.name_id == arg){
+      if (obj.displayName == arg){
         obj.executeAction("remove");
-        io.writeNewLine("You have taken off ${obj.name_id}");
+        io.writeNewLine("You have taken off ${obj.displayName}");
         return;
       }
     }

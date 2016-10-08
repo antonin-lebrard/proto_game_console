@@ -23,9 +23,9 @@ main(List<String> args) {
   });
 
   console.onEnter.listen((_) {
-    print("You are in the room: ${game.player.plateau.currentRoom.name_id}");
+    print("You are in the room: ${game.player.plateau.currentRoom.displayName}");
   });
-  print("You are in the room: ${game.player.plateau.currentRoom.name_id}");
+  print("You are in the room: ${game.player.plateau.currentRoom.displayName}");
   console.beginInput();
 
 }
